@@ -24,7 +24,7 @@ std::stack<Position> valid_positions;
 Position load_maze(const std::string& file_name) {
     // TODO: Implemente esta função seguindo estes passos:
     // 1. Abra o arquivo especificado por file_name usando std::ifstream
-    std::string full_path = "../data/" + file_name;
+    std::string full_path = "/home/felipefacury/envs/ATR/ex1/maze_runner/data/" + file_name;
     //std::cout << full_path << std::endl;
     std::ifstream file(full_path);
     if (!file.is_open()) {

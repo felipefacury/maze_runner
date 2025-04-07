@@ -21,7 +21,7 @@ struct Position {
 Maze maze;
 int num_rows;
 int num_cols;
-std::stack<Position> valid_positions;
+
 
 // Função para carregar o labirinto de um arquivo
 Position load_maze(const std::string& file_name) {
@@ -109,9 +109,12 @@ bool is_valid_position(int row, int col) {
 // Função principal para navegar pelo labirinto
 void walk(Position pos, bool* exit_found) {
 
+    std::unique_lock walk_lock(lock);
+
+    std::stack<Position> valid_positions;
     std::stack<std::thread> steps;
 
-    std::unique_lock walk_lock(lock);
+    
     if (maze[pos.row][pos.col] == 's'){
         maze[pos.row][pos.col] = '.';
         *exit_found = true;
@@ -136,7 +139,7 @@ void walk(Position pos, bool* exit_found) {
     //    Para cada posição adjacente:
     //    a. Se for uma posição válida (use is_valid_position()), adicione-a à pilha valid_positions
 
-    walk_lock.lock();
+    //walk_lock.lock();
     if (is_valid_position(pos.row - 1, pos.col)){     // Trás
         valid_positions.push({pos.row - 1, pos.col});
     }
@@ -150,7 +153,7 @@ void walk(Position pos, bool* exit_found) {
         valid_positions.push({pos.row + 1, pos.col});
     }
     
-    walk_lock.unlock();
+    //walk_lock.unlock();
     // 6. Enquanto houver posições válidas na pilha (!valid_positions.empty()):
     //    a. Remova a próxima posição da pilha (valid_positions.top() e valid_positions.pop())
     //    b. Chame walk recursivamente para esta posição
